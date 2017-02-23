@@ -503,6 +503,33 @@ class AbstractField(AbstractMementoCreator, metaclass=abc.ABCMeta):
     #             result.append(message)
     #     return result
 
+    def generateDot(self):
+        """Generates the dot code representing the current symbol or field.
+
+        :return: a string containing the dot code of the current symbol of field.
+        :rtype: a :class:`list`
+        """
+
+        dotCode = []
+        dotCode.append('digraph G { graph [pad=".75", ranksep="0.25", nodesep="0.01"];')
+        dotCode.append(self.generateDotContent())
+        dotCode.append("}")
+        return '\n'.join(dotCode)
+
+    def generateDotContent(self):
+        dotCode = []
+
+        dotCode.append('"{0}" [shape=record, style=filled];'.format(self.name))
+        if len(self.fields) == 0:
+            dotCode.append('"{0}" -> "{1}" [fontsize=5];'.format(self.name, self.domain.name))
+            dotCode.append(self.domain.generateDotContent())
+        else:
+           for field in self.fields:
+                dotCode.append('"{0}" -> "{1}" [fontsize=5];'.format(self.name, field.name))
+                dotCode.append(field.generateDotContent())
+
+        return '\n'.join(dotCode)
+
     @abc.abstractmethod
     def specialize(self, mutator=None):
         """Specialize and generate a :class:`netzob.Model.Vocabulary.Messages.RawMessage` which content

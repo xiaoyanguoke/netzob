@@ -107,6 +107,13 @@ class AbstractVariable(object):
     #     """Returns a string which denotes
     #     the current domain definition using a tree display"""
 
+    def generateDotContent(self):
+        dotCode = []
+
+        dotCode.append('"{0}" [shape=ellipse, style=filled, label="{1}"];'.format(self.name, str(self.varType)))
+
+        return '\n'.join(dotCode)
+
     #+---------------------------------------------------------------------------+
     #| Properties                                                                |
     #+---------------------------------------------------------------------------+
